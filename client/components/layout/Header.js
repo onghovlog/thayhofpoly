@@ -59,20 +59,12 @@ export default function Header() {
               src={SITE_CONFIG.logo}
               alt={SITE_CONFIG.name}
               style={{
-                width: '2.6rem',
-                height: '2.6rem',
+                height: '3rem',
                 borderRadius: 'var(--radius)',
                 objectFit: 'contain',
               }}
             />
-            <div>
-              <div style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--secondary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                THẦY HOTB
-              </div>
-              <div style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Learning Hub
-              </div>
-            </div>
+
           </Link>
 
           {/* Desktop Navigation */}

@@ -18,6 +18,7 @@ import {
   Flame,
   Award,
 } from 'lucide-react';
+import { submitContact } from '@/services/contactService';
 
 const SLIDES = [
   {
@@ -172,15 +173,25 @@ export default function Hero() {
     setIsModalOpen(true);
   };
 
-  const handleSubmitRegistration = (e) => {
+  const handleSubmitRegistration = async (e) => {
     e.preventDefault();
     setFormLoading(true);
 
-    // Simulate API registration call
-    setTimeout(() => {
-      setFormLoading(false);
+    try {
+      await submitContact({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.course,
+        message: formData.note || `Đăng ký tư vấn: ${formData.course}`,
+        type: 'consultation',
+      });
       setFormSubmitted(true);
-    }, 600);
+    } catch (err) {
+      alert(err.message || 'Lỗi khi gửi đăng ký. Vui lòng thử lại.');
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const current = SLIDES[currentSlide];

@@ -16,6 +16,8 @@ import {
   Menu,
   X,
   User,
+  Settings,
+  Mail,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -53,6 +55,8 @@ export default function AdminLayout({ children }) {
     { label: 'Quản lý Chủ đề', href: '/admin/categories', icon: Layers },
     { label: 'Quản lý Lộ trình', href: '/admin/learning-paths', icon: Milestone },
     { label: 'Thông tin Giảng viên', href: '/admin/instructor', icon: User },
+    { label: 'Tin nhắn & Liên hệ', href: '/admin/contacts', icon: Mail },
+    { label: 'Cài đặt hệ thống', href: '/admin/settings', icon: Settings },
   ];
 
   return (
