@@ -1,6 +1,7 @@
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import QuickContact from '@/components/layout/QuickContact';
 import { SITE_CONFIG } from '@/utils/constants';
 
 export const metadata = {
@@ -104,6 +105,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main>{children}</main>
         <Footer />
+        <QuickContact />
       </body>
     </html>
   );
