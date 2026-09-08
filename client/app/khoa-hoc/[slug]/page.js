@@ -133,7 +133,7 @@ export default async function CourseDetailPage({ params }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Video size={16} color="var(--primary)" />
-              <span>{course.videoCount || 0} bài giảng</span>
+              <span>{course.lessons?.length || course.videoCount || 0} bài giảng</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Clock size={16} color="var(--primary)" />
@@ -145,10 +145,10 @@ export default async function CourseDetailPage({ params }) {
         {/* Video Player Section */}
         <div style={{ marginBottom: '3.5rem' }}>
           <YoutubePlayer
+            lessons={course.lessons}
             playlistId={course.youtubePlaylistId}
             playlistUrl={course.youtubePlaylistUrl}
             title={course.title}
-            syllabus={course.syllabus}
           />
         </div>
 

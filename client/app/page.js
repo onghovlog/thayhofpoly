@@ -37,7 +37,7 @@ export default async function HomePage() {
       pathsRes,
     ] = await Promise.all([
       getCategories({ active: 'true' }).catch(() => ({ data: [] })),
-      getCourses({ featured: 'true', limit: 6 }).catch(() => ({ data: [] })),
+      getCourses({ featured: 'true', sort: 'newest', limit: 6 }).catch(() => ({ data: [] })),
       getCourses({ category: 'frontend-development', limit: 3 }).catch(() => ({ data: [] })),
       getCourses({ category: 'ui-ux-design', limit: 3 }).catch(() => ({ data: [] })),
       getCourses({ category: 'digital-marketing', limit: 3 }).catch(() => ({ data: [] })),
@@ -77,7 +77,6 @@ export default async function HomePage() {
         <CategoryCoursesSection
           tag="Chuyên ngành Web"
           title="Khóa học Web Development thực chiến"
-          description="Làm chủ HTML, CSS, JavaScript, React và Next.js để sẵn sàng ứng tuyển vị trí lập trình viên Frontend/Full-stack."
           categorySlug="frontend-development"
           courses={webCourses}
         />
@@ -88,7 +87,6 @@ export default async function HomePage() {
         <CategoryCoursesSection
           tag="Chuyên ngành Thiết kế"
           title="Khóa học UI/UX & Graphic Design"
-          description="Thành thạo công cụ Figma, tư duy bố cục, màu sắc và xây dựng bộ giao diện sản phẩm số chuẩn công nghiệp."
           categorySlug="ui-ux-design"
           courses={designCourses}
           isAltBg={true}
@@ -100,7 +98,6 @@ export default async function HomePage() {
         <CategoryCoursesSection
           tag="Chuyên ngành Marketing"
           title="Khóa học Digital & Content Marketing"
-          description="Học cách xây dựng phễu nội dung, chạy quảng cáo thực chiến và phát triển kênh số từ con số 0."
           categorySlug="digital-marketing"
           courses={marketingCourses}
         />
@@ -111,7 +108,6 @@ export default async function HomePage() {
         <CategoryCoursesSection
           tag="Kỷ nguyên AI"
           title="Khóa học AI ứng dụng cho Designer & Developer"
-          description="Tăng tốc năng suất làm việc gấp 5 lần với các công cụ trí tuệ nhân tạo hiện đại nhất hiện nay."
           categorySlug="ai-ung-dung"
           courses={aiCourses}
           isAltBg={true}

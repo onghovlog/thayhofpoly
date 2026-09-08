@@ -107,14 +107,11 @@ function CoursesContent() {
         <Breadcrumb items={[{ label: 'Khóa học miễn phí' }]} />
 
         {/* Page Header */}
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '1.75rem' }}>
           <span className="section-tag">Kho bài giảng</span>
-          <h1 style={{ fontSize: '2.25rem', color: 'var(--secondary)', marginBottom: '0.6rem' }}>
+          <h1 style={{ fontSize: '2.25rem', color: 'var(--secondary)', marginBottom: '0.25rem' }}>
             Tất cả khóa học thực chiến
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '680px' }}>
-            Danh sách toàn bộ các khóa học miễn phí qua playlist YouTube được phân loại theo chủ đề và cấp độ.
-          </p>
         </div>
 
         {/* Course Filters */}

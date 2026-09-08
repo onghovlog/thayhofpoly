@@ -1,8 +1,59 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { SITE_CONFIG } from '@/utils/constants';
-import { Youtube, Facebook, Linkedin, Github, CheckCircle2, Award, Users, BookOpen } from 'lucide-react';
+import { getInstructorProfile } from '@/services/instructorService';
+import { Youtube, Facebook, Linkedin, Github, CheckCircle2 } from 'lucide-react';
 
 export default function InstructorSection() {
-  const { instructor, socialLinks } = SITE_CONFIG;
+  const [profile, setProfile] = useState({
+    name: SITE_CONFIG.instructor.name,
+    title: SITE_CONFIG.instructor.title,
+    avatar: SITE_CONFIG.instructor.avatar,
+    bio: SITE_CONFIG.instructor.bio,
+    philosophy: SITE_CONFIG.instructor.philosophy,
+    highlights: [
+      'Thực chiến 100% qua dự án',
+      'Dễ hiểu cho người mới',
+      'Hoàn toàn miễn phí',
+    ],
+    stats: SITE_CONFIG.instructor.stats,
+    socialLinks: SITE_CONFIG.socialLinks,
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await getInstructorProfile();
+        if (res.success && res.data) {
+          const d = res.data;
+          setProfile({
+            name: d.name || SITE_CONFIG.instructor.name,
+            title: d.title || SITE_CONFIG.instructor.title,
+            avatar: d.avatar || SITE_CONFIG.instructor.avatar,
+            bio: d.bio || SITE_CONFIG.instructor.bio,
+            philosophy: d.philosophy || SITE_CONFIG.instructor.philosophy,
+            highlights: d.highlights?.length ? d.highlights : [
+              'Thực chiến 100% qua dự án',
+              'Dễ hiểu cho người mới',
+              'Hoàn toàn miễn phí',
+            ],
+            stats: d.stats?.length ? d.stats : SITE_CONFIG.instructor.stats,
+            socialLinks: {
+              youtube: d.socialLinks?.youtube || SITE_CONFIG.socialLinks.youtube,
+              facebook: d.socialLinks?.facebook || SITE_CONFIG.socialLinks.facebook,
+              linkedin: d.socialLinks?.linkedin || SITE_CONFIG.socialLinks.linkedin,
+              github: d.socialLinks?.github || SITE_CONFIG.socialLinks.github,
+            },
+          });
+        }
+      } catch (err) {
+        // Fallback to default constants silently
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <section className="section" id="giang-vien">
@@ -36,93 +87,104 @@ export default function InstructorSection() {
               }}
             >
               <img
-                src={instructor.avatar}
-                alt={instructor.name}
+                src={profile.avatar}
+                alt={profile.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+                }}
               />
             </div>
 
             <h3 style={{ fontSize: '1.4rem', color: 'var(--secondary)', marginBottom: '0.3rem' }}>
-              {instructor.name}
+              {profile.name}
             </h3>
             <p style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '1.25rem' }}>
-              {instructor.title}
+              {profile.title}
             </p>
 
             {/* Social Buttons */}
             <div style={{ display: 'flex', gap: '0.6rem' }}>
-              <a
-                href={socialLinks.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube Channel"
-                style={{
-                  width: '2.4rem',
-                  height: '2.4rem',
-                  borderRadius: 'var(--radius)',
-                  backgroundColor: '#FEE2E2',
-                  color: '#EF4444',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Youtube size={17} />
-              </a>
-              <a
-                href={socialLinks.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook Profile"
-                style={{
-                  width: '2.4rem',
-                  height: '2.4rem',
-                  borderRadius: 'var(--radius)',
-                  backgroundColor: '#DBEAFE',
-                  color: '#2563EB',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Facebook size={17} />
-              </a>
-              <a
-                href={socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn Profile"
-                style={{
-                  width: '2.4rem',
-                  height: '2.4rem',
-                  borderRadius: 'var(--radius)',
-                  backgroundColor: '#E0F2FE',
-                  color: '#0284C7',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Linkedin size={17} />
-              </a>
-              <a
-                href={socialLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub Profile"
-                style={{
-                  width: '2.4rem',
-                  height: '2.4rem',
-                  borderRadius: 'var(--radius)',
-                  backgroundColor: '#F1F5F9',
-                  color: '#0F172A',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Github size={17} />
-              </a>
+              {profile.socialLinks.youtube && (
+                <a
+                  href={profile.socialLinks.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube Channel"
+                  style={{
+                    width: '2.4rem',
+                    height: '2.4rem',
+                    borderRadius: 'var(--radius)',
+                    backgroundColor: '#FEE2E2',
+                    color: '#EF4444',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Youtube size={17} />
+                </a>
+              )}
+              {profile.socialLinks.facebook && (
+                <a
+                  href={profile.socialLinks.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook Profile"
+                  style={{
+                    width: '2.4rem',
+                    height: '2.4rem',
+                    borderRadius: 'var(--radius)',
+                    backgroundColor: '#DBEAFE',
+                    color: '#2563EB',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Facebook size={17} />
+                </a>
+              )}
+              {profile.socialLinks.linkedin && (
+                <a
+                  href={profile.socialLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn Profile"
+                  style={{
+                    width: '2.4rem',
+                    height: '2.4rem',
+                    borderRadius: 'var(--radius)',
+                    backgroundColor: '#E0F2FE',
+                    color: '#0284C7',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Linkedin size={17} />
+                </a>
+              )}
+              {profile.socialLinks.github && (
+                <a
+                  href={profile.socialLinks.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub Profile"
+                  style={{
+                    width: '2.4rem',
+                    height: '2.4rem',
+                    borderRadius: 'var(--radius)',
+                    backgroundColor: '#F1F5F9',
+                    color: '#0F172A',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Github size={17} />
+                </a>
+              )}
             </div>
           </div>
 
@@ -130,42 +192,38 @@ export default function InstructorSection() {
           <div>
             <span className="section-tag">Giảng viên hướng dẫn</span>
             <h2 style={{ fontSize: '1.85rem', color: 'var(--secondary)', marginBottom: '1rem', lineHeight: 1.3 }}>
-              Học cùng Thầy HOTB
+              Học cùng {profile.name}
             </h2>
 
             <p style={{ fontSize: '1.02rem', color: '#475569', lineHeight: 1.7, marginBottom: '1.25rem' }}>
-              {instructor.bio}
+              {profile.bio}
             </p>
 
-            <blockquote
-              style={{
-                borderLeft: '4px solid var(--primary)',
-                padding: '0.75rem 1.25rem',
-                backgroundColor: 'var(--bg-alt)',
-                color: 'var(--secondary)',
-                borderRadius: '0 var(--radius) var(--radius) 0',
-                marginBottom: '1.75rem',
-                fontStyle: 'italic',
-                fontSize: '0.98rem',
-              }}
-            >
-              &ldquo;{instructor.philosophy}&rdquo;
-            </blockquote>
+            {profile.philosophy && (
+              <blockquote
+                style={{
+                  borderLeft: '4px solid var(--primary)',
+                  padding: '0.75rem 1.25rem',
+                  backgroundColor: 'var(--bg-alt)',
+                  color: 'var(--secondary)',
+                  borderRadius: '0 var(--radius) var(--radius) 0',
+                  marginBottom: '1.75rem',
+                  fontStyle: 'italic',
+                  fontSize: '0.98rem',
+                }}
+              >
+                &ldquo;{profile.philosophy}&rdquo;
+              </blockquote>
+            )}
 
             {/* Core Values */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                <CheckCircle2 size={18} color="var(--primary)" />
-                <span>Thực chiến 100% qua dự án</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                <CheckCircle2 size={18} color="var(--primary)" />
-                <span>Dễ hiểu cho người mới</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                <CheckCircle2 size={18} color="var(--primary)" />
-                <span>Hoàn toàn miễn phí</span>
-              </div>
+              {profile.highlights.map((h, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem', color: 'var(--secondary)', fontWeight: 600 }}>
+                  <CheckCircle2 size={18} color="var(--primary)" />
+                  <span>{h}</span>
+                </div>
+              ))}
             </div>
 
             {/* Stats Counter */}
@@ -178,7 +236,7 @@ export default function InstructorSection() {
                 borderTop: '1px solid var(--border)',
               }}
             >
-              {instructor.stats.map((stat, idx) => (
+              {profile.stats.map((stat, idx) => (
                 <div key={idx}>
                   <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1.1 }}>
                     {stat.value}

@@ -10,7 +10,7 @@ export default function LatestArticles({ articles = [] }) {
         <SectionTitle
           tag="Kiến thức mới"
           title="Bài viết & Tutorial chuyên sâu"
-          description="Cập nhật những bài viết, thủ thuật và kinh nghiệm thực chiến mới nhất từ Thầy HOTB."
+          description=""
           actionLink="/bai-viet"
           actionText="Xem tất cả bài viết →"
         />

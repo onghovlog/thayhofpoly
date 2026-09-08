@@ -20,6 +20,7 @@ const learningPathRoutes = require('./src/routes/learningPathRoutes');
 const youtubeRoutes = require('./src/routes/youtubeRoutes');
 const searchRoutes = require('./src/routes/searchRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
+const instructorRoutes = require('./src/routes/instructorRoutes');
 
 // Initialize database
 connectDB();
@@ -116,6 +117,7 @@ app.use('/api/learning-paths', learningPathRoutes);
 app.use('/api/youtube', youtubeRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/instructor', instructorRoutes);
 
 // 404 Handler cho API routes không tồn tại
 app.use((req, res, next) => {

@@ -1,5 +1,45 @@
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Layers } from 'lucide-react';
+import {
+  Palette,
+  Layout,
+  Globe,
+  Code2,
+  Server,
+  Sparkles,
+  TrendingUp,
+  PenSquare,
+  Video,
+  Briefcase,
+  Layers,
+} from 'lucide-react';
+
+// Ánh xạ slug sang icon chuyên môn phù hợp
+const getCategoryIcon = (slug) => {
+  switch (slug) {
+    case 'thiet-ke-do-hoa':
+      return <Palette size={22} />;
+    case 'ui-ux-design':
+      return <Layout size={22} />;
+    case 'lap-trinh-web':
+      return <Globe size={22} />;
+    case 'frontend-development':
+      return <Code2 size={22} />;
+    case 'backend-development':
+      return <Server size={22} />;
+    case 'ai-ung-dung':
+      return <Sparkles size={22} />;
+    case 'digital-marketing':
+      return <TrendingUp size={22} />;
+    case 'content-marketing':
+      return <PenSquare size={22} />;
+    case 'video-editing':
+      return <Video size={22} />;
+    case 'ky-nang-nghe-nghiep':
+      return <Briefcase size={22} />;
+    default:
+      return <Layers size={22} />;
+  }
+};
 
 export default function CategoryCard({ category }) {
   if (!category) return null;
@@ -7,89 +47,19 @@ export default function CategoryCard({ category }) {
   return (
     <Link
       href={`/chu-de/${category.slug}`}
-      className="card"
-      style={{
-        padding: '1.5rem',
-        textDecoration: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
-      }}
+      className="category-box"
+      title={category.name}
     >
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '1rem',
-          }}
-        >
-          <div
-            style={{
-              width: '2.75rem',
-              height: '2.75rem',
-              borderRadius: 'var(--radius)',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Layers size={22} />
-          </div>
-
-          <div
-            style={{
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              backgroundColor: 'var(--bg-alt)',
-              padding: '0.2rem 0.6rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-            }}
-          >
-            {category.courseCount || 0} khóa học
-          </div>
-        </div>
-
-        <h3 style={{ fontSize: '1.2rem', color: 'var(--secondary)', marginBottom: '0.5rem', lineHeight: 1.3 }}>
-          {category.name}
-        </h3>
-
-        <p
-          style={{
-            fontSize: '0.88rem',
-            color: 'var(--text-muted)',
-            lineHeight: 1.5,
-            marginBottom: '1.25rem',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          {category.description || 'Khám phá các khóa học và bài viết chất lượng cao trong chuyên ngành này.'}
-        </p>
+      <div className="category-box-icon">
+        {getCategoryIcon(category.slug)}
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingTop: '0.75rem',
-          borderTop: '1px solid var(--border)',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          color: 'var(--primary)',
-        }}
-      >
-        <span>Khám phá chủ đề</span>
-        <ArrowRight size={15} />
+      <h3 className="category-box-title">
+        {category.name}
+      </h3>
+
+      <div className="category-box-count">
+        {category.courseCount || 0} khóa học
       </div>
     </Link>
   );

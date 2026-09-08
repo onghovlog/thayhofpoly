@@ -1,5 +1,48 @@
 const mongoose = require('mongoose');
 
+const LessonSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: [true, 'Vui lòng nhập tên bài học'],
+      trim: true,
+    },
+    youtubeUrl: {
+      type: String,
+      required: [true, 'Vui lòng nhập link YouTube bài học'],
+      trim: true,
+    },
+    videoId: {
+      type: String,
+      required: [true, 'Vui lòng có Video ID bài học'],
+      trim: true,
+    },
+    thumbnail: {
+      type: String,
+      default: '',
+    },
+    duration: {
+      type: String,
+      default: '15:00',
+    },
+    fileName: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    fileUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    order: {
+      type: Number,
+      default: 1,
+    },
+  },
+  { _id: true, timestamps: false }
+);
+
 const CourseSchema = new mongoose.Schema(
   {
     title: {
@@ -22,17 +65,26 @@ const CourseSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Vui lòng nhập mô tả chi tiết'],
+      required: [true, 'Vui lòng nhập mô tả chung chi tiết'],
       trim: true,
     },
     thumbnail: {
       type: String,
       default: '/images/default-course.jpg',
     },
+    duration: {
+      type: String,
+      default: 'Tự học theo tiến độ',
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
       required: [true, 'Vui lòng chọn chủ đề'],
+    },
+    lessons: [LessonSchema],
+    videoCount: {
+      type: Number,
+      default: 0,
     },
     tags: [
       {
@@ -51,21 +103,13 @@ const CourseSchema = new mongoose.Schema(
     },
     youtubePlaylistUrl: {
       type: String,
-      required: [true, 'Vui lòng nhập link YouTube Playlist'],
+      default: '',
       trim: true,
     },
     youtubePlaylistId: {
       type: String,
-      required: [true, 'Vui lòng có YouTube Playlist ID'],
+      default: '',
       trim: true,
-    },
-    videoCount: {
-      type: Number,
-      default: 0,
-    },
-    duration: {
-      type: String,
-      default: 'Tự học theo tiến độ',
     },
     instructor: {
       name: {
@@ -101,14 +145,6 @@ const CourseSchema = new mongoose.Schema(
       {
         type: String,
         trim: true,
-      },
-    ],
-    syllabus: [
-      {
-        title: String,
-        videoId: String,
-        duration: String,
-        order: Number,
       },
     ],
     relatedArticles: [

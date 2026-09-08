@@ -31,9 +31,7 @@ export default async function LearningPathsPage() {
           <h1 style={{ fontSize: '2.4rem', color: 'var(--secondary)', marginBottom: '0.75rem' }}>
             Lộ trình học tập từ cơ bản đến nâng cao
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '720px' }}>
-            Được cấu trúc theo quy trình chuẩn của doanh nghiệp, giúp bạn tiết kiệm thời gian và nắm vững kiến thức trọng tâm.
-          </p>
+
         </div>
 
         {paths.length === 0 ? (

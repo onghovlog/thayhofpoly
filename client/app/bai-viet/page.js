@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Breadcrumb from '@/components/common/Breadcrumb';
 import ArticleGrid from '@/components/article/ArticleGrid';
@@ -10,10 +10,11 @@ import EmptyState from '@/components/common/EmptyState';
 import ErrorState from '@/components/common/ErrorState';
 import { getArticles } from '@/services/articleService';
 import { getCategories } from '@/services/categoryService';
-import { Search } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function ArticlesContent() {
   const searchParams = useSearchParams();
+  const pillsRef = useRef(null);
 
   const [categories, setCategories] = useState([]);
   const [articles, setArticles] = useState([]);
@@ -24,6 +25,16 @@ function ArticlesContent() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page'), 10) || 1);
   const [pagination, setPagination] = useState({ total: 0, totalPages: 1, page: 1 });
+
+  const handleScroll = (direction) => {
+    if (pillsRef.current) {
+      const scrollAmount = direction === 'left' ? -260 : 260;
+      pillsRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchCats = async () => {
@@ -94,9 +105,7 @@ function ArticlesContent() {
           <h1 style={{ fontSize: '2.25rem', color: 'var(--secondary)', marginBottom: '0.6rem' }}>
             Bài viết & Tutorial chuyên sâu
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '680px' }}>
-            Tổng hợp các bài viết hướng dẫn thực chiến, kiến thức nền tảng và kinh nghiệm làm nghề từ Thầy HOTB.
-          </p>
+
         </div>
 
         {/* Search & Category Filter Pills */}
@@ -117,46 +126,88 @@ function ArticlesContent() {
             />
           </form>
 
-          <div className="horizontal-scroll">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
             <button
-              onClick={() => handleCategoryChange('all')}
-              style={{
-                padding: '0.45rem 1rem',
-                borderRadius: '9999px',
-                fontSize: '0.88rem',
-                fontWeight: selectedCategory === 'all' ? 700 : 500,
-                border: selectedCategory === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
-                backgroundColor: selectedCategory === 'all' ? 'var(--primary)' : '#FFFFFF',
-                color: selectedCategory === 'all' ? '#FFFFFF' : 'var(--secondary)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
+              type="button"
+              onClick={() => handleScroll('left')}
+              className="pills-nav-arrow"
+              title="Cuộn sang trái"
+              aria-label="Cuộn sang trái"
             >
-              Tất cả bài viết
+              <ChevronLeft size={16} />
             </button>
 
-            {categories.map((cat) => {
-              const isSelected = selectedCategory === cat.slug;
-              return (
-                <button
-                  key={cat._id || cat.slug}
-                  onClick={() => handleCategoryChange(cat.slug)}
-                  style={{
-                    padding: '0.45rem 1rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.88rem',
-                    fontWeight: isSelected ? 700 : 500,
-                    border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border)',
-                    backgroundColor: isSelected ? 'var(--primary)' : '#FFFFFF',
-                    color: isSelected ? '#FFFFFF' : 'var(--secondary)',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {cat.name}
-                </button>
-              );
-            })}
+            <div
+              ref={pillsRef}
+              className="category-pills-container"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                overflowX: 'auto',
+                scrollBehavior: 'smooth',
+                padding: '0.25rem 0',
+                flex: 1,
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => handleCategoryChange('all')}
+                style={{
+                  padding: '0.45rem 1rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.88rem',
+                  fontWeight: selectedCategory === 'all' ? 700 : 500,
+                  border: selectedCategory === 'all' ? '1px solid var(--primary)' : '1px solid var(--border)',
+                  backgroundColor: selectedCategory === 'all' ? 'var(--primary)' : '#FFFFFF',
+                  color: selectedCategory === 'all' ? '#FFFFFF' : 'var(--secondary)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease',
+                  flexShrink: 0,
+                }}
+              >
+                Tất cả bài viết
+              </button>
+
+              {categories.map((cat) => {
+                const isSelected = selectedCategory === cat.slug;
+                return (
+                  <button
+                    key={cat._id || cat.slug}
+                    type="button"
+                    onClick={() => handleCategoryChange(cat.slug)}
+                    style={{
+                      padding: '0.45rem 1rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.88rem',
+                      fontWeight: isSelected ? 700 : 500,
+                      border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border)',
+                      backgroundColor: isSelected ? 'var(--primary)' : '#FFFFFF',
+                      color: isSelected ? '#FFFFFF' : 'var(--secondary)',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleScroll('right')}
+              className="pills-nav-arrow"
+              title="Cuộn sang phải"
+              aria-label="Cuộn sang phải"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ export default function FeaturedCourses({ courses = [] }) {
         <SectionTitle
           tag="Video Playlist"
           title="Khóa học nổi bật"
-          description="Các khóa học được thiết kế thực chiến, bám sát nhu cầu tuyển dụng thực tế của doanh nghiệp."
+          description=""
           actionLink="/khoa-hoc"
           actionText="Xem tất cả khóa học"
         />

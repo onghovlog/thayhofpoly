@@ -52,6 +52,7 @@ export default function AdminLayout({ children }) {
     { label: 'Quản lý Bài viết', href: '/admin/articles', icon: FileText },
     { label: 'Quản lý Chủ đề', href: '/admin/categories', icon: Layers },
     { label: 'Quản lý Lộ trình', href: '/admin/learning-paths', icon: Milestone },
+    { label: 'Thông tin Giảng viên', href: '/admin/instructor', icon: User },
   ];
 
   return (

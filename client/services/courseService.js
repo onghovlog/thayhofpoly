@@ -41,3 +41,11 @@ export const deleteCourse = async (id) => {
     cache: 'no-store',
   });
 };
+
+export const getYoutubeVideoInfo = async (url) => {
+  return await fetchApi(`/youtube/video-info?url=${encodeURIComponent(url)}`, { cache: 'no-store' });
+};
+
+export const getYoutubePlaylistInfo = async (url) => {
+  return await fetchApi(`/youtube/playlist-info?url=${encodeURIComponent(url)}`, { cache: 'no-store' });
+};

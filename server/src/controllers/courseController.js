@@ -1,6 +1,31 @@
 const Course = require('../models/Course');
 const Category = require('../models/Category');
-const { slugifyText, parseYoutubePlaylistId, sendResponse, sendError } = require('../utils/helpers');
+const { slugifyText, parseYoutubePlaylistId, parseYoutubeVideoId, sendResponse, sendError } = require('../utils/helpers');
+
+/**
+ * Chuẩn hóa mảng bài học
+ */
+const sanitizeLessons = (lessons = []) => {
+  if (!Array.isArray(lessons)) return [];
+  return lessons
+    .filter((l) => l && (l.title || l.youtubeUrl || l.videoId))
+    .map((l, index) => {
+      const vid = l.videoId || parseYoutubeVideoId(l.youtubeUrl);
+      const yUrl = l.youtubeUrl || (vid ? `https://www.youtube.com/watch?v=${vid}` : '');
+      const thumb = l.thumbnail || (vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '');
+      return {
+        _id: l._id || undefined,
+        title: l.title ? l.title.trim() : `Bài học ${index + 1}`,
+        youtubeUrl: yUrl,
+        videoId: vid,
+        thumbnail: thumb,
+        duration: l.duration ? l.duration.trim() : '15:00',
+        fileName: l.fileName ? l.fileName.trim() : '',
+        fileUrl: l.fileUrl ? l.fileUrl.trim() : '',
+        order: Number(l.order) || index + 1,
+      };
+    });
+};
 
 /**
  * @desc    Lấy danh sách khóa học có phân trang, lọc và tìm kiếm
@@ -67,6 +92,7 @@ const getCourses = async (req, res, next) => {
       query.$or = [
         { title: { $regex: search.trim(), $options: 'i' } },
         { shortDescription: { $regex: search.trim(), $options: 'i' } },
+        { description: { $regex: search.trim(), $options: 'i' } },
         { tags: { $in: [new RegExp(search.trim(), 'i')] } },
       ];
     }
@@ -105,7 +131,7 @@ const getCourses = async (req, res, next) => {
 };
 
 /**
- * @desc    Lấy chi tiết khóa học theo slug kèm liên kết bài viết & khóa học liên quan
+ * @desc    Lấy chi tiết khóa học theo slug kèm danh sách bài học & khóa học liên quan
  * @route   GET /api/courses/:slug
  * @access  Public
  */
@@ -125,6 +151,11 @@ const getCourseBySlug = async (req, res, next) => {
       return sendError(res, 404, 'Không tìm thấy khóa học');
     }
 
+    // Sắp xếp các bài học theo thứ tự tăng dần
+    if (course.lessons && course.lessons.length > 0) {
+      course.lessons.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+
     // Tìm các khóa học liên quan trong cùng chủ đề
     const relatedCourses = await Course.find({
       category: course.category?._id,
@@ -132,7 +163,7 @@ const getCourseBySlug = async (req, res, next) => {
       status: 'published',
     })
       .populate('category', 'name slug')
-      .limit(4)
+      .limit(3)
       .sort({ createdAt: -1 });
 
     return sendResponse(
@@ -163,6 +194,10 @@ const getCourseById = async (req, res, next) => {
       return sendError(res, 404, 'Không tìm thấy khóa học');
     }
 
+    if (course.lessons && course.lessons.length > 0) {
+      course.lessons.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+
     return sendResponse(res, 200, course, 'Lấy khóa học thành công');
   } catch (error) {
     next(error);
@@ -170,7 +205,7 @@ const getCourseById = async (req, res, next) => {
 };
 
 /**
- * @desc    Tạo khóa học mới
+ * @desc    Tạo khóa học mới kèm danh sách bài học
  * @route   POST /api/courses
  * @access  Private (Admin)
  */
@@ -178,32 +213,34 @@ const createCourse = async (req, res, next) => {
   try {
     const data = req.body;
 
-    if (!data.title) {
+    if (!data.title || !data.title.trim()) {
       return sendError(res, 400, 'Tên khóa học không được để trống');
     }
     if (!data.category) {
       return sendError(res, 400, 'Chủ đề khóa học không được để trống');
     }
-    if (!data.youtubePlaylistUrl) {
-      return sendError(res, 400, 'Link YouTube Playlist không được để trống');
-    }
 
-    // Tự động bóc tách Playlist ID nếu chưa có
-    const playlistId = data.youtubePlaylistId || parseYoutubePlaylistId(data.youtubePlaylistUrl);
-    if (!playlistId) {
-      return sendError(res, 400, 'Không thể nhận diện YouTube Playlist ID từ URL cung cấp');
+    // Chuẩn hóa danh sách bài học nếu có
+    const formattedLessons = sanitizeLessons(data.lessons || []);
+
+    // Tự động phân tích Playlist ID nếu có playlistUrl
+    let playlistId = data.youtubePlaylistId || '';
+    if (data.youtubePlaylistUrl) {
+      playlistId = parseYoutubePlaylistId(data.youtubePlaylistUrl) || playlistId;
     }
 
     const finalSlug = data.slug ? slugifyText(data.slug) : slugifyText(data.title);
 
     const existing = await Course.findOne({ slug: finalSlug });
     if (existing) {
-      return sendError(res, 400, 'Slug khóa học này đã tồn tại');
+      return sendError(res, 400, 'Slug khóa học này đã tồn tại, vui lòng chọn slug khác');
     }
 
     const course = await Course.create({
       ...data,
       slug: finalSlug,
+      lessons: formattedLessons,
+      videoCount: formattedLessons.length || Number(data.videoCount) || 0,
       youtubePlaylistId: playlistId,
     });
 
@@ -215,7 +252,7 @@ const createCourse = async (req, res, next) => {
 
 /**
  * @desc    Cập nhật khóa học
- * @route   PUT /api/courses/:id
+ * @route   PUT /api/courses/id/:id (hoặc /api/courses/:id)
  * @access  Private (Admin)
  */
 const updateCourse = async (req, res, next) => {
@@ -236,6 +273,11 @@ const updateCourse = async (req, res, next) => {
       data.youtubePlaylistId = parseYoutubePlaylistId(data.youtubePlaylistUrl);
     }
 
+    if (data.lessons) {
+      data.lessons = sanitizeLessons(data.lessons);
+      data.videoCount = data.lessons.length;
+    }
+
     const updatedCourse = await Course.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
@@ -249,7 +291,7 @@ const updateCourse = async (req, res, next) => {
 
 /**
  * @desc    Xóa khóa học
- * @route   DELETE /api/courses/:id
+ * @route   DELETE /api/courses/id/:id
  * @access  Private (Admin)
  */
 const deleteCourse = async (req, res, next) => {

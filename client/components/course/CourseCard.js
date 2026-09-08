@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { PlayCircle, Clock, Video, User } from 'lucide-react';
@@ -16,9 +18,13 @@ export default function CourseCard({ course }) {
         style={{ position: 'relative', width: '100%', paddingTop: '56.25%', overflow: 'hidden', backgroundColor: '#F1F5F9' }}
       >
         <img
-          src={course.thumbnail || '/images/default-course.jpg'}
+          src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80'}
           alt={course.title}
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80';
+          }}
           style={{
             position: 'absolute',
             top: 0,
@@ -56,7 +62,7 @@ export default function CourseCard({ course }) {
           }}
         >
           <Video size={13} />
-          <span>{course.videoCount || 0} bài giảng</span>
+          <span>{course.lessons?.length || course.videoCount || 0} bài</span>
         </div>
       </Link>
 

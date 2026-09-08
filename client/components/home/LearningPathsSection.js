@@ -10,7 +10,7 @@ export default function LearningPathsSection({ paths = [] }) {
         <SectionTitle
           tag="Định hướng nghề nghiệp"
           title="Lộ trình học tập từng bước"
-          description="Không còn hoang mang không biết bắt đầu từ đâu. Lộ trình được thiết kế tuần tự từ cơ bản đến nâng cao."
+          description=""
           actionLink="/lo-trinh"
           actionText="Khám phá các lộ trình"
         />

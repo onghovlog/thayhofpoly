@@ -50,6 +50,44 @@ const parseYoutubePlaylistId = (input) => {
 };
 
 /**
+ * Trích xuất YouTube Video ID từ URL hoặc ID thuần
+ * Ví dụ:
+ * https://www.youtube.com/watch?v=kUMe1FH4CHE
+ * https://youtu.be/kUMe1FH4CHE
+ * https://www.youtube.com/embed/kUMe1FH4CHE
+ * kUMe1FH4CHE
+ */
+const parseYoutubeVideoId = (input) => {
+  if (!input) return '';
+  const trimmed = input.trim();
+
+  // Nếu là chuỗi 11 ký tự alnum/_/- không chứa dấu / hay ?
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // youtu.be/<id>
+  const shortMatch = trimmed.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if (shortMatch && shortMatch[1]) {
+    return shortMatch[1];
+  }
+
+  // youtube.com/watch?v=<id>
+  const watchMatch = trimmed.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+  if (watchMatch && watchMatch[1]) {
+    return watchMatch[1];
+  }
+
+  // embed/<id> or v/<id>
+  const embedMatch = trimmed.match(/(?:embed|v)\/([a-zA-Z0-9_-]{11})/);
+  if (embedMatch && embedMatch[1]) {
+    return embedMatch[1];
+  }
+
+  return trimmed;
+};
+
+/**
  * Tính thời gian đọc bài viết (phút)
  */
 const calculateReadingTime = (content) => {
@@ -93,6 +131,7 @@ const sendError = (res, statusCode = 400, message = 'Đã có lỗi xảy ra', e
 module.exports = {
   slugifyText,
   parseYoutubePlaylistId,
+  parseYoutubeVideoId,
   calculateReadingTime,
   sendResponse,
   sendError,
