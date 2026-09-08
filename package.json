@@ -1,0 +1,24 @@
+{
+  "name": "thayhotb-learning-hub",
+  "version": "1.0.0",
+  "description": "Thầy HOTB Learning Hub - Kho kiến thức thực chiến về Design, Web, Marketing và AI",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "build:client": "npm --prefix client run build",
+    "start:client": "npm --prefix client run start",
+    "start:server": "npm --prefix server run start"
+  },
+  "keywords": [
+    "thayhotb",
+    "learning-hub",
+    "nextjs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Thầy HOTB",
+  "license": "MIT"
+}
