@@ -9,4 +9,6 @@ module.exports = {
   JWT_EXPIRE: process.env.JWT_EXPIRE || '30d',
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || '',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
+  TRUST_PROXY: process.env.TRUST_PROXY || '1',
 };
+

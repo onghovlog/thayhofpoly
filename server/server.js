@@ -29,6 +29,10 @@ connectDB();
 
 const app = express();
 
+// Trust reverse proxy (Nginx, Cloudflare, Traefik) trên VPS
+// Rất quan trọng để express-rate-limit và req.ip hoạt động chính xác khi chạy sau proxy
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(
   helmet({
@@ -36,21 +40,43 @@ app.use(
   })
 );
 
-// CORS configuration
-const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:3000',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  'https://thayhotb.vn',
-];
+// CORS configuration linh hoạt cho VPS / Production / Development
+const parseAllowedOrigins = () => {
+  const envOrigins = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',').map((url) => url.trim().replace(/\/+$/, ''))
+    : [];
+  const defaultOrigins = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://thayhotb.vn',
+    'https://www.thayhotb.vn',
+  ];
+  return Array.from(new Set([...envOrigins, ...defaultOrigins].filter(Boolean)));
+};
+
+const allowedOrigins = parseAllowedOrigins();
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Cho phép request không có origin (như curl, mobile apps) hoặc thuộc allowedOrigins
-      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      // Cho phép request không có origin (như curl, mobile apps, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Nếu CLIENT_URL là '*' hoặc đang ở chế độ development, cho phép tất cả
+      if (process.env.CLIENT_URL === '*' || process.env.NODE_ENV === 'development') {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = origin.replace(/\/+$/, '');
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (allowed === '*') return true;
+        return allowed === normalizedOrigin;
+      });
+
+      if (isAllowed) {
         callback(null, true);
       } else {
+        console.warn(`[CORS Blocked] Origin '${origin}' không nằm trong danh sách được phép:`, allowedOrigins);
         callback(new Error('Chặn bởi chính sách CORS'));
       }
     },
