@@ -12,7 +12,7 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
-    subject: '',
+    subject: 'Đăng ký 1 kèm 1',
     message: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -125,7 +125,7 @@ export default function ContactPage() {
                 <button
                   onClick={() => {
                     setSubmitted(false);
-                    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+                    setFormData({ name: '', email: '', phone: '', subject: 'Đăng ký 1 kèm 1', message: '' });
                   }}
                   className="btn btn-outline"
                 >
@@ -188,14 +188,20 @@ export default function ContactPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Chủ đề liên hệ</label>
-                  <input
-                    type="text"
+                  <label className="form-label">Chủ đề liên hệ *</label>
+                  <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="form-input"
-                    placeholder="Hỏi về khóa học / Góp ý / Hợp tác..."
-                  />
+                    style={{ cursor: 'pointer', backgroundColor: '#FFFFFF' }}
+                  >
+                    <option value="Đăng ký 1 kèm 1">🎯 Đăng ký 1 kèm 1</option>
+                    <option value="Hỏi về khóa học">📚 Hỏi về khóa học</option>
+                    <option value="Hỏi về lộ trình học Thiết kế">🎨 Hỏi về lộ trình học Thiết kế</option>
+                    <option value="Hỏi về lộ trình học Web">💻 Hỏi về lộ trình học Web</option>
+                    <option value="Hỏi về lộ trình học AI">🤖 Hỏi về lộ trình học AI</option>
+                    <option value="Hỏi về lộ trình học Vibe Coding">⚡ Hỏi về lộ trình học Vibe Coding</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
