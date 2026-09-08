@@ -54,24 +54,17 @@ export default function Header() {
       >
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '4.25rem' }}>
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <img
+              src={SITE_CONFIG.logo}
+              alt={SITE_CONFIG.name}
               style={{
-                width: '2.4rem',
-                height: '2.4rem',
-                backgroundColor: 'var(--primary)',
-                color: '#FFFFFF',
+                width: '2.6rem',
+                height: '2.6rem',
                 borderRadius: 'var(--radius)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '1.1rem',
-                letterSpacing: '-0.03em',
+                objectFit: 'contain',
               }}
-            >
-              H
-            </div>
+            />
             <div>
               <div style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--secondary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
                 THẦY HOTB

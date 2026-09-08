@@ -27,23 +27,19 @@ export default function Footer() {
         >
           {/* Brand Info */}
           <div style={{ maxWidth: '320px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-              <div
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}>
+              <img
+                src={SITE_CONFIG.logo}
+                alt={SITE_CONFIG.name}
                 style={{
-                  width: '2.2rem',
-                  height: '2.2rem',
-                  backgroundColor: 'var(--primary)',
-                  color: '#FFFFFF',
+                  width: '2.4rem',
+                  height: '2.4rem',
                   borderRadius: 'var(--radius)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '1rem',
+                  objectFit: 'contain',
+                  backgroundColor: '#FFFFFF',
+                  padding: '2px',
                 }}
-              >
-                H
-              </div>
+              />
               <span style={{ fontWeight: 800, fontSize: '1.25rem', color: '#FFFFFF', letterSpacing: '-0.02em' }}>
                 THẦY HOTB
               </span>

@@ -2,6 +2,8 @@ export const SITE_CONFIG = {
   name: 'THẦY HOTB',
   title: 'Thầy HOTB Learning Hub - Kho kiến thức thực chiến',
   slogan: 'Học thực chiến. Làm được việc.',
+  logo: '/images/logo.png',
+  favicon: '/favicon.ico',
   description:
     'Kho học liệu miễn phí dành cho sinh viên và người mới bắt đầu về Thiết kế đồ họa, UI/UX, Lập trình Web, Frontend, Backend, AI ứng dụng, Marketing và Kỹ năng nghề nghiệp.',
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',

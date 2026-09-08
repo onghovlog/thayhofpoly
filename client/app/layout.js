@@ -47,7 +47,7 @@ export const metadata = {
     description: SITE_CONFIG.description,
     images: [`${SITE_CONFIG.siteUrl}/images/og-image.jpg`],
   },
-  robots: {
+    robots: {
     index: true,
     follow: true,
     googleBot: {
@@ -57,6 +57,17 @@ export const metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/images/icon.png', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+    apple: [
+      { url: '/images/icon.png' },
+    ],
   },
 };
 
@@ -81,6 +92,9 @@ export default function RootLayout({ children }) {
     <html lang="vi">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="icon" href="/images/icon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/icon.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

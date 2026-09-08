@@ -85,23 +85,19 @@ export default function AdminLayout({ children }) {
             borderBottom: '1px solid #1E293B',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <img
+              src="/images/logo.png"
+              alt="Thầy HOTB"
               style={{
-                width: '2rem',
-                height: '2rem',
-                backgroundColor: 'var(--primary)',
-                color: '#FFFFFF',
+                width: '2.2rem',
+                height: '2.2rem',
                 borderRadius: 'var(--radius-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '1rem',
+                objectFit: 'contain',
+                backgroundColor: '#FFFFFF',
+                padding: '2px',
               }}
-            >
-              H
-            </div>
+            />
             <div>
               <div style={{ fontWeight: 800, color: '#FFFFFF', fontSize: '1rem' }}>THẦY HOTB</div>
               <div style={{ fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 700, textTransform: 'uppercase' }}>

@@ -55,23 +55,17 @@ export default function AdminLoginPage() {
       >
         {/* Brand Logo */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div
+          <img
+            src="/images/logo.png"
+            alt="Thầy HOTB"
             style={{
-              width: '3rem',
-              height: '3rem',
-              backgroundColor: 'var(--primary)',
-              color: '#FFFFFF',
+              width: '4rem',
+              height: '4rem',
               borderRadius: 'var(--radius)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: '1.4rem',
+              objectFit: 'contain',
               margin: '0 auto 0.75rem',
             }}
-          >
-            H
-          </div>
+          />
           <h1 style={{ fontSize: '1.5rem', color: 'var(--secondary)', marginBottom: '0.3rem' }}>
             Đăng nhập Quản trị
           </h1>
