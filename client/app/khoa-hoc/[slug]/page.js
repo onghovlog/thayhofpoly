@@ -4,6 +4,7 @@ import Breadcrumb from '@/components/common/Breadcrumb';
 import YoutubePlayer from '@/components/course/YoutubePlayer';
 import CourseCard from '@/components/course/CourseCard';
 import ArticleCard from '@/components/article/ArticleCard';
+import InstructorMiniCard from '@/components/course/InstructorMiniCard';
 import { getCourseBySlug } from '@/services/courseService';
 import { formatLevel } from '@/utils/formatters';
 import { SITE_CONFIG } from '@/utils/constants';
@@ -269,49 +270,10 @@ export default async function CourseDetailPage({ params }) {
               }}
             >
               {/* Instructor Mini Card */}
-              <div
-                style={{
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1.5rem',
-                  backgroundColor: '#FFFFFF',
-                }}
-              >
-                <h4 style={{ fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                  Giảng viên hướng dẫn
-                </h4>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
-                  <img
-                    src={course.instructor?.avatar || '/images/instructor-avatar.jpg'}
-                    alt={course.instructor?.name || 'Thầy HOTB'}
-                    style={{ width: '3.2rem', height: '3.2rem', borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                  <div>
-                    <h5 style={{ fontSize: '1.1rem', color: 'var(--secondary)', marginBottom: '0.2rem' }}>
-                      {course.instructor?.name || 'Thầy HOTB'}
-                    </h5>
-                    <p style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
-                      {course.instructor?.title || 'Giảng viên Thiết kế & CNTT'}
-                    </p>
-                  </div>
-                </div>
-
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-                  {course.instructor?.bio || 'Đào tạo thực chiến theo định hướng Học → Làm → Tạo sản phẩm.'}
-                </p>
-
-                <a
-                  href={course.youtubePlaylistUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                  style={{ width: '100%' }}
-                >
-                  <span>Xem playlist YouTube</span>
-                  <ExternalLink size={15} />
-                </a>
-              </div>
+              <InstructorMiniCard
+                instructor={course.instructor}
+                youtubePlaylistUrl={course.youtubePlaylistUrl}
+              />
 
               {/* Tags */}
               {course.tags && course.tags.length > 0 && (

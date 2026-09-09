@@ -103,7 +103,7 @@ export default function ArticleCard({ article, horizontal = false }) {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <img
-              src={article.author?.avatar || '/images/instructor-avatar.jpg'}
+              src={article.author?.avatar && !article.author.avatar.includes('instructor-avatar.jpg') ? article.author.avatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
               alt={article.author?.name || 'Thầy HOTB'}
               style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', objectFit: 'cover' }}
             />
