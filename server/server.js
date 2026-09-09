@@ -50,6 +50,9 @@ const parseAllowedOrigins = () => {
     'http://127.0.0.1:3000',
     'https://thayhotb.vn',
     'https://www.thayhotb.vn',
+    'https://uiuxnextgen.com',
+    'https://www.uiuxnextgen.com',
+    'http://uiuxnextgen.com',
   ];
   return Array.from(new Set([...envOrigins, ...defaultOrigins].filter(Boolean)));
 };
