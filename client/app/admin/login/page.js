@@ -7,8 +7,8 @@ import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@thayhotb.vn');
-  const [password, setPassword] = useState('Admin@123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -54,15 +54,16 @@ export default function AdminLoginPage() {
         }}
       >
         {/* Brand Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <img
             src="/images/logo.png"
             alt="Thầy HOTB"
             style={{
-              width: '4rem',
-              height: '4rem',
-              borderRadius: 'var(--radius)',
+              height: '100px',
+              width: 'auto',
+              maxWidth: '100%',
               objectFit: 'contain',
+              display: 'block',
               margin: '0 auto 0.75rem',
             }}
           />
@@ -144,10 +145,6 @@ export default function AdminLoginPage() {
             <ArrowRight size={16} />
           </button>
         </form>
-
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-          Tài khoản demo: <strong>admin@thayhotb.vn</strong> / <strong>Admin@123456</strong>
-        </div>
       </div>
     </div>
   );

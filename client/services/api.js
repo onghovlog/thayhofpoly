@@ -64,10 +64,29 @@ export const fetchApi = async (endpoint, options = {}) => {
 
   try {
     const res = await fetch(url, config);
-    const result = await res.json();
+    const contentType = res.headers.get('content-type') || '';
+    
+    let result;
+    if (contentType.includes('application/json')) {
+      result = await res.json();
+    } else {
+      const text = await res.text();
+      if (!res.ok) {
+        throw new Error(
+          res.status === 404
+            ? `Không tìm thấy API endpoint: ${url}`
+            : `Lỗi kết nối máy chủ API (${res.status}). Vui lòng đảm bảo Server Backend đang chạy.`
+        );
+      }
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Phản hồi không đúng định dạng JSON từ ${url}`);
+      }
+    }
 
     if (!res.ok) {
-      throw new Error(result.message || `Lỗi API: ${res.status}`);
+      throw new Error(result?.message || `Lỗi API: ${res.status}`);
     }
 
     return result;

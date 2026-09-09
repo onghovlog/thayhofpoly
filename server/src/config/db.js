@@ -12,6 +12,25 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 10000,
     });
     console.log(`[MongoDB] ✅ Đã kết nối thành công: ${conn.connection.host} (DB: ${conn.connection.name})`);
+
+    // Tự động khởi tạo tài khoản Admin mặc định nếu chưa tồn tại
+    try {
+      const User = require('../models/User');
+      const adminEmail = 'admin@thayhotb.vn';
+      const existingAdmin = await User.findOne({ email: adminEmail });
+      if (!existingAdmin) {
+        await User.create({
+          name: 'Thầy HOTB (Admin)',
+          email: adminEmail,
+          password: 'Admin@123456',
+          role: 'admin',
+          avatar: '/images/instructor-avatar.jpg',
+        });
+        console.log(`[Admin] 👤 Đã tạo tài khoản admin mặc định: ${adminEmail} / Admin@123456`);
+      }
+    } catch (adminErr) {
+      console.warn(`[Admin Auto-Init] Không thể khởi tạo admin mặc định: ${adminErr.message}`);
+    }
   } catch (error) {
     console.error(`[MongoDB Error] ❌ Lỗi kết nối CSDL: ${error.message}`);
     if (
