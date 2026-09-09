@@ -1,27 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { SITE_CONFIG } from '@/utils/constants';
+import { getInstructorProfile } from '@/services/instructorService';
 
 const DEFAULT_AVATAR =
   SITE_CONFIG.instructor?.avatar ||
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
 export default function InstructorMiniCard({ instructor, youtubePlaylistUrl }) {
-  const [imgSrc, setImgSrc] = useState(() => {
-    if (instructor?.avatar && !instructor.avatar.includes('instructor-avatar.jpg')) {
-      return instructor.avatar;
-    }
-    return DEFAULT_AVATAR;
+  const [profile, setProfile] = useState({
+    name: instructor?.name || SITE_CONFIG.instructor?.name || 'Thầy HOTB',
+    title: instructor?.title || SITE_CONFIG.instructor?.title || 'Giảng viên Thiết kế & CNTT',
+    avatar:
+      instructor?.avatar && !instructor.avatar.includes('instructor-avatar.jpg')
+        ? instructor.avatar
+        : DEFAULT_AVATAR,
+    bio:
+      instructor?.bio ||
+      SITE_CONFIG.instructor?.bio ||
+      'Hơn 10 năm kinh nghiệm giảng dạy và thực chiến trong ngành Thiết kế đồ họa, Web & Marketing.',
   });
 
-  const name = instructor?.name || SITE_CONFIG.instructor?.name || 'Thầy HOTB';
-  const title = instructor?.title || SITE_CONFIG.instructor?.title || 'Giảng viên Thiết kế & CNTT';
-  const bio =
-    instructor?.bio ||
-    SITE_CONFIG.instructor?.bio ||
-    'Đào tạo thực chiến theo định hướng Học → Làm → Tạo sản phẩm.';
+  // Tải dữ liệu giảng viên mới nhất từ Database (/api/instructor)
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      try {
+        const res = await getInstructorProfile();
+        if (res.success && res.data) {
+          const d = res.data;
+          setProfile((prev) => ({
+            name: d.name || prev.name,
+            title: d.title || prev.title,
+            avatar:
+              d.avatar && !d.avatar.includes('instructor-avatar.jpg')
+                ? d.avatar
+                : prev.avatar || DEFAULT_AVATAR,
+            bio: d.bio || prev.bio,
+          }));
+        }
+      } catch (error) {
+        // Giữ nguyên dữ liệu khởi tạo nếu có lỗi mạng
+      }
+    };
+
+    fetchLatestProfile();
+  }, [instructor]);
 
   return (
     <div
@@ -48,9 +73,11 @@ export default function InstructorMiniCard({ instructor, youtubePlaylistUrl }) {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
         <img
-          src={imgSrc}
-          alt={name}
-          onError={() => setImgSrc(DEFAULT_AVATAR)}
+          src={profile.avatar}
+          alt={profile.name}
+          onError={(e) => {
+            e.target.src = DEFAULT_AVATAR;
+          }}
           style={{
             width: '3.4rem',
             height: '3.4rem',
@@ -62,10 +89,10 @@ export default function InstructorMiniCard({ instructor, youtubePlaylistUrl }) {
         />
         <div>
           <h5 style={{ fontSize: '1.08rem', color: 'var(--secondary)', marginBottom: '0.2rem' }}>
-            {name}
+            {profile.name}
           </h5>
           <p style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
-            {title}
+            {profile.title}
           </p>
         </div>
       </div>
@@ -78,7 +105,7 @@ export default function InstructorMiniCard({ instructor, youtubePlaylistUrl }) {
           marginBottom: '1.25rem',
         }}
       >
-        {bio}
+        {profile.bio}
       </p>
 
       {youtubePlaylistUrl && (
